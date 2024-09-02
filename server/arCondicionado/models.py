@@ -17,15 +17,21 @@ class ServerMQTT(models.Model):
     usuario = models.CharField(max_length=50)  
     senha = models.CharField(max_length=255)
     host = models.CharField(max_length=13)
+    def __str__(self):
+        return self.host
 
 class Dispositivos(models.Model):
     nome = models.CharField(max_length=255)
     codigo_ir = models.CharField(max_length=20)
     temperatura = models.CharField(max_length=6)
     status = models.BooleanField()
-    serverMQTT = models.ForeignKey(ServerMQTT)
+    serverMQTT = models.ForeignKey(ServerMQTT,on_delete= models.CASCADE)
+    def __str__(self):
+        return self.nome
 
 class Sala(models.Model):
     nome = models.CharField(max_length=255)
     temperatura = models.CharField(max_length=6)
-    dispositivo = models.ForeignKey(Dispositivos)
+    dispositivo = models.ForeignKey(Dispositivos,on_delete= models.CASCADE)
+    def __str__(self):
+        return self.nome
