@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Usuario,ServerMQTT,Dispositivos,Sala
+from .models import Usuario,ServerMQTT,Sala,Modulo_IF_Smart,Dispositivos,Modelo_Dispositivos
 
 
 class UsuarioAdmin(admin.ModelAdmin):
@@ -11,10 +11,15 @@ class ServerMQTTAdmin(admin.ModelAdmin):
 class SalaAdmin(admin.ModelAdmin):
     list_display = ("id","nome","temperatura","dispositivo") 
 
-class DispositivosAdmin(admin.ModelAdmin):
-    list_display = ("id","nome","temperatura","status","serverMQTT") 
+class Modelo_DispositivosAdmin(admin.ModelAdmin):
+    list_display = ("id","tipo","marca","modelo","codigo_IR") 
+
+class Modulo_IF_SmartAdmin(admin.ModelAdmin):
+    list_display = ("id","nome","temperatura","status","serverMQTT","Dispositivos") 
 
 admin.site.register(Usuario,UsuarioAdmin)
 admin.site.register(ServerMQTT,ServerMQTTAdmin)
-admin.site.register(Dispositivos,DispositivosAdmin)
-admin.site.register(Sala,SalaAdmin)
+admin.site.register(Modulo_IF_Smart)
+admin.site.register(Modelo_Dispositivos,Modelo_DispositivosAdmin)
+admin.site.register(Sala)
+admin.site.register(Dispositivos)
