@@ -6,7 +6,7 @@ class Usuario(models.Model):
         ('Professor','Professor'),
         ('Coordenação de turma','Coordenação de turma')
     ]
-    login = models.CharField(max_length=50)
+    login = models.CharField(max_length=50,unique=True)
     senha = models.CharField(max_length=255)
     nivel = models.CharField(max_length=30,choices=TIPO_USER,default=TIPO_USER[1]) 
     img_url = models.CharField(max_length=50)
@@ -62,3 +62,6 @@ class Sala(models.Model):
     modulo_IF_Smart = models.ManyToManyField(Modulo_IF_Smart)
     def __str__(self):
         return f'{self.nome} - {self.local}'
+    
+
+  
