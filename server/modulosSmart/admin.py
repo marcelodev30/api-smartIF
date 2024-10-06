@@ -18,15 +18,15 @@ class DispositivosAdmin(admin.ModelAdmin):
 class ComandoAdmin(admin.ModelAdmin):
     list_display = ("id","nome","codigo","dispositivo")
 
-admin.register(Usuario)
-admin.register(Tipo_user)
-admin.register(Sala)
-admin.register(Setor)
-admin.register(Registro_Uso)
-admin.register(Tipo,TipoAdmin)
-admin.register(Dispositivos)
-admin.register(Comando)
-admin.register(modulo_smart)
+admin.site.register(Usuario,UsuarioAdmin)
+admin.site.register(Tipo_user,TipoAdmin)
+admin.site.register(Sala,SalaAdmin)
+admin.site.register(Setor,TipoAdmin)
+admin.site.register(Registro_Uso,Registro_UsoAdmin)
+admin.site.register(Tipo,TipoAdmin)
+admin.site.register(Dispositivos,DispositivosAdmin)
+admin.site.register(Comando,ComandoAdmin)
+admin.site.register(modulo_smart)
 
 
 

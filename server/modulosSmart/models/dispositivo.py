@@ -13,6 +13,8 @@ class Dispositivos(models.Model):
     modelo = models.CharField(max_length=50)
     status = models.BooleanField(default=False)
     sala = models.ForeignKey(Sala,on_delete=models.CASCADE)
+    def __str__(self):
+        return f'{self.tipo_id} - {self.sala.nome} - {self.marca} - {self.modelo}'
 
 class Comando(models.Model):
     nome = models.CharField(max_length=100)
