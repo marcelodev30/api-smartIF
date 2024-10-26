@@ -4,6 +4,7 @@ from rest_framework import status
 from .models import Comando as dbComando
 from .models import Dispositivos as dbDispositivos
 from .serializers import DispositivoSerializer
+from .mqtt_client import client
 
 class DispositivoSendMQTT(APIView):
     def post(self, request):
@@ -14,6 +15,8 @@ class DispositivoSendMQTT(APIView):
 
         if(query_dados.exists()):
             dado = str(query_dados.values_list('codigo',flat=True)).split("'")[1]
+            client.publish('server/dispositivo',dado)
+          
             return Response({'status': 'success', 'Comando': f'{dado}'}, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'error'}, status=status.HTTP_404_NOT_FOUND)

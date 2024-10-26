@@ -5,5 +5,5 @@ from rest_framework.authtoken.views import obtain_auth_token
 urlpatterns = [
     path('api/Dispositivos/send', DispositivoSendMQTT.as_view(), name='send'),
     path('api/Dispositivos', GetDispositivos.as_view(), name='getData'),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
 ]
