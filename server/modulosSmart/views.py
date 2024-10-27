@@ -16,6 +16,13 @@ class DispositivoSendMQTT(APIView):
         if(query_dados.exists()):
             dado = str(query_dados.values_list('codigo',flat=True)).split("'")[1]
             client.publish('smartIF/dispositivo/'+str(request_id),dado)
+            query_Dispositivo = dbDispositivos.objects.get(id= request_id)
+            if request_Comando == 'on':
+                query_Dispositivo.status=True
+                query_Dispositivo.save()
+            elif request_Comando =='off':
+               query_Dispositivo.status= False
+               query_Dispositivo.save()
             return Response({'status': 'success', 'Comando': f'{dado}'}, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'error'}, status=status.HTTP_404_NOT_FOUND)
