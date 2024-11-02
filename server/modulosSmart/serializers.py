@@ -42,7 +42,3 @@ class UsuarioSerializer(serializers.ModelSerializer):
         user.save()
         return user 
     
-class LoginSerializer(serializers.Serializer):
-      class Meta:
-        model = Usuario
-        fields = ['id','login','senha']
