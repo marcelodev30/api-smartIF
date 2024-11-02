@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import Usuario ,Tipo_user,Sala,Setor,Registro_Uso,Tipo,Dispositivos,Comando,modulo_smart
+from .models import Usuario ,Tipo_user,Sala,Setor,Registro_Uso,Tipo,Dispositivos,Comando,modulo_smart,RegistroLog
 
 class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ("id","login","senha","nivel","nome")
+    list_display = ("id","login","nivel","nome","senha")
 
 class TipoAdmin(admin.ModelAdmin):
     list_display = ("id","nome")
@@ -18,6 +18,9 @@ class DispositivosAdmin(admin.ModelAdmin):
 class ComandoAdmin(admin.ModelAdmin):
     list_display = ("id","nome","codigo","dispositivo")
 
+class RegistroLogAdmin(admin.ModelAdmin):
+    list_display = ("id","dispositivo","comando","usuario","created_date")
+
 admin.site.register(Usuario,UsuarioAdmin)
 admin.site.register(Tipo_user,TipoAdmin)
 admin.site.register(Sala,SalaAdmin)
@@ -27,6 +30,7 @@ admin.site.register(Tipo,TipoAdmin)
 admin.site.register(Dispositivos,DispositivosAdmin)
 admin.site.register(Comando,ComandoAdmin)
 admin.site.register(modulo_smart)
+admin.site.register(RegistroLog,RegistroLogAdmin)
 
 
 

@@ -10,6 +10,6 @@ class Tipo_user(models.Model):
 class Usuario(models.Model):
     login = models.CharField(max_length=50,unique=True)
     senha = models.CharField(max_length=255)
-    nivel = models.ForeignKey(Tipo_user,on_delete=models.CASCADE) 
+    nivel = models.ForeignKey(Tipo_user,on_delete=models.CASCADE,default=1) 
     nome = models.CharField(max_length=100)
    
