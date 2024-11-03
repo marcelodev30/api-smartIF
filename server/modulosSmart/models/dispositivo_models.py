@@ -3,31 +3,36 @@ from .salas_models import Sala
 from uuid import uuid4
 
 
-class Tipo(models.Model):
+class ModeloDisposivito(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
-    nome= models.CharField(max_length=100)
-    def __str__(self):
-        return self.nome
+    nome = models.CharField(max_length=100,default='Ar Condicionado')
+    marca = models.CharField(max_length=20)
+    modelo = models.CharField(max_length=50)
+    min_temperatura = models.IntegerField(default=18)
+    max_temperatura = models.IntegerField(default=27)
     class Meta:
-        verbose_name = 'Tipo do Dispositivo'
+        verbose_name = 'Modelo do Disposivito'
+    def __str__(self):
+        return f'{self.nome} - {self.marca} - {self.modelo}'
+    
 
 class Dispositivos(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
-    tipo_id = models.ForeignKey(Tipo,on_delete= models.CASCADE)
-    marca = models.CharField(max_length=20)
-    modelo = models.CharField(max_length=50)
+    modelo = models.ForeignKey(ModeloDisposivito,on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
     sala = models.ForeignKey(Sala,on_delete=models.CASCADE)
     updated= models.DateTimeField(auto_now=True)
+    class Meta:
+        verbose_name = 'Disposivito'
     def __str__(self):
-        return f'{self.tipo_id.nome} - {self.sala.nome} - {self.marca} - {self.modelo}'
+        return f'{self.modelo} - {self.sala.nome}'
  
 
 class Comando(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
     nome = models.CharField(max_length=100)
     codigo = models.CharField(max_length=100)
-    dispositivo = models.ForeignKey(Dispositivos,on_delete=models.CASCADE)
+    modelo = models.ForeignKey(ModeloDisposivito,on_delete=models.CASCADE)
     class Meta:
         verbose_name = 'Comandos IR'
 

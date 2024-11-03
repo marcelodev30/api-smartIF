@@ -1,13 +1,8 @@
 from rest_framework import serializers
-from .models import Dispositivos,Tipo,Sala,Setor,Usuario
+from .models import Dispositivos,Sala,Setor,Usuario,ModeloDisposivito
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
 
-
-class TipoDispositivoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tipo
-        fields = ['nome']
 
 class SetorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,12 +15,17 @@ class SalaSerializer(serializers.ModelSerializer):
         model = Sala
         fields = ['nome','local']
 
+class ModeloDisposivitoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ModeloDisposivito
+        fields = ['nome','marca','modelo','min_temperatura','max_temperatura']
+
 class DispositivoSerializer(serializers.ModelSerializer):
-    tipo_id = TipoDispositivoSerializer()
+    modelo=ModeloDisposivitoSerializer()
     sala = SalaSerializer()
     class Meta:
         model = Dispositivos
-        fields = ['id','tipo_id','marca','modelo','status','sala']
+        fields = ['id','modelo','status','sala']
 
 class UsuarioSerializer(serializers.ModelSerializer):
     senha = serializers.CharField(write_only=True)
