@@ -13,6 +13,6 @@ class Usuario(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
     login = models.CharField(max_length=50,unique=True)
     senha = models.CharField(max_length=255)
-    nivel = models.ForeignKey(Tipo_user,on_delete=models.CASCADE,default=1) 
+    nivel = models.ForeignKey(Tipo_user,on_delete=models.CASCADE,default='60d126a1c8d449968eac8cf3b53a1c55') 
     nome = models.CharField(max_length=100)
    
