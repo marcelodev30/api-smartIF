@@ -1,5 +1,6 @@
 from django.db import models
 from uuid import uuid4
+
 class Setor(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
     nome= models.CharField(max_length=100)
@@ -18,10 +19,3 @@ class Sala(models.Model):
         verbose_name = 'Salas - Laboratorio'
     
 
-class Registro_Uso(models.Model):
-    id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
-    comeco = models.DateTimeField()
-    fim = models.DateTimeField()
-    sala = models.ForeignKey(Sala,on_delete=models.CASCADE)
-    class Meta:
-        verbose_name = 'Registro Uso'

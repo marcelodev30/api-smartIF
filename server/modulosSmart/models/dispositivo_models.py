@@ -18,9 +18,10 @@ class ModeloDisposivito(models.Model):
 
 class Dispositivos(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
-    modelo = models.ForeignKey(ModeloDisposivito,on_delete=models.CASCADE)
+    modelo = models.ForeignKey(ModeloDisposivito,on_delete=models.SET_NULL ,null=True)
     status = models.BooleanField(default=False)
-    sala = models.ForeignKey(Sala,on_delete=models.CASCADE)
+   # atual_temperatura = models.IntegerField(default=22)
+    sala = models.ForeignKey(Sala,on_delete=models.SET_NULL ,null=True)
     updated= models.DateTimeField(auto_now=True)
     class Meta:
         verbose_name = 'Disposivito'
@@ -32,7 +33,7 @@ class Comando(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
     nome = models.CharField(max_length=100)
     codigo = models.CharField(max_length=100)
-    modelo = models.ForeignKey(ModeloDisposivito,on_delete=models.CASCADE)
+    modelo = models.ForeignKey(ModeloDisposivito,on_delete=models.SET_NULL ,null=True)
     class Meta:
         verbose_name = 'Comandos IR'
 

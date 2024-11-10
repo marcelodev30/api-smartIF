@@ -1,7 +1,6 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Dispositivos,Sala,Setor,Usuario,ModeloDisposivito
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth import authenticate
+from .models import Dispositivos,Sala,Setor,ModeloDisposivito,Registro_Cenários
 
 
 class SetorSerializer(serializers.ModelSerializer):
@@ -28,17 +27,22 @@ class DispositivoSerializer(serializers.ModelSerializer):
         fields = ['id','modelo','status','sala']
 
 class UsuarioSerializer(serializers.ModelSerializer):
-    senha = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True)
+
     class Meta:
-        model = Usuario
-        fields = ['login','senha','nome']
-    def create(self,validated_data):
-        user  = Usuario(
-            login = validated_data['login'],
-            nome = validated_data['nome'],
-            senha=validated_data['senha']
-            )
-        #user.senha=make_password(validated_data['senha'])
-        user.save()
-        return user 
+        model = User
+        fields = ('username', 'password', 'email', 'first_name')
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            password=validated_data['password'],
+            email=validated_data.get('email', ''),
+            first_name=validated_data.get('first_name', ''),
+        )
+        return 
     
+class RegistroCenáriosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Registro_Cenários
+        fields = ["nome","ação","dispositivo","data","status"]
