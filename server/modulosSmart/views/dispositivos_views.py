@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 from ..models import Comando as dbComando
 from ..models import Dispositivos as dbDispositivos
 from ..models import RegistroLog
@@ -13,10 +14,14 @@ class GetDispositivos(APIView):
     def get(self, request):
         query_dados = dbDispositivos.objects.all()
         serializer = DispositivoSerializer(query_dados, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
 
-
+class DispositivoDetailAPI(APIView):
+    def get(selt,request,idKey):
+        query_dispositivo = get_object_or_404(dbDispositivos,id=idKey)
+        serializer = DispositivoSerializer(query_dispositivo,many=False)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
 
 class DispositivoControleTemperatura(APIView):
@@ -42,7 +47,7 @@ class DispositivoControleTemperatura(APIView):
                     RegistroLog(comando = request_Comando,usuario=request.user.username,dispositivo = query_Dispositivo.modelo.nome+" - "+query_Dispositivo.sala.nome).save()
                     return Response({'status': 'success', 'message': f"O ar-condicionado do {query_Dispositivo.sala.nome} está com a temperatura ajustada para {temperatura_comando}°C"}, status=status.HTTP_200_OK)
                 else:
-                     return Response({'status': 'error', 'message': 'Dispositivo está  desligado!'}, status=status.HTTP_400_BAD_REQUEST)
+                     return Response({'status': 'error', 'message': 'Dispositivo está desligado!'}, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response({'status': 'error', 'message': 'Temperatura fora do intervalo permitido!'}, status=status.HTTP_400_BAD_REQUEST)
         except ValueError:
@@ -67,7 +72,6 @@ class DispositivoControleEstado(APIView):
             query_Dispositivo.save()
 
         query_dbComando = dbComando.objects.get(nome = request_Comando, modelo = query_Dispositivo.modelo.id)
-        #dado = str(query_dbComando.values_list('codigo',flat=True)).split("'")[1]
         client.publish('smartIF/dispositivo/'+str(request_id),query_dbComando.codigo)
         RegistroLog(comando = request_Comando,usuario=request.user.username,dispositivo = query_Dispositivo.modelo.nome+" - "+query_Dispositivo.sala.nome).save()
         
