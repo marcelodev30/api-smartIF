@@ -41,7 +41,12 @@ class UsuarioSerializer(serializers.ModelSerializer):
             first_name=validated_data.get('first_name', ''),
         )
         return 
-    
+
+class UsuarioDetalhesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name')
+
 class RegistroCenáriosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Registro_Cenários

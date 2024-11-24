@@ -7,10 +7,11 @@ from ..models import Dispositivos as dbDispositivos
 from ..models import RegistroLog
 from ..serializers import DispositivoSerializer
 from ..mqtt_client import client
-
+from rest_framework.permissions import AllowAny
 
 
 class GetDispositivos(APIView):
+    permission_classes = [AllowAny]
     def get(self, request):
         query_dados = dbDispositivos.objects.all()
         serializer = DispositivoSerializer(query_dados, many=True)
@@ -25,6 +26,7 @@ class DispositivoDetailAPI(APIView):
 
 
 class DispositivoControleTemperatura(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
 
         request_id = request.data.get('id')
