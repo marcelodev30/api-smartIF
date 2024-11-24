@@ -7,18 +7,6 @@ from ..serializers import UsuarioSerializer,UsuarioDetalhesSerializer
 
 
 
-class UsuárioNívelAcesso(APIView):
-    permission_classes = [IsAdminUser]
-    def post(self, request,idKey):
-        try:
-            query_usuario = User.objects.get(pk=idKey)
-            query_usuario.is_superuser = False if query_usuario.is_superuser else query_usuario.is_superuser= True
-            return Response({"message": "Nível de acesso atualizado com sucesso."}, status=status.HTTP_200_OK)  
-        except:
-             return Response({'status': 'error', 'message': 'Usuario não encontrado!'}, status=status.HTTP_404_NOT_FOUND) 
-
-         
-
 class UsuárioViews(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
@@ -30,6 +18,18 @@ class UsuárioViews(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class UsuárioNívelAcesso(APIView):
+    permission_classes = [IsAdminUser]
+    def post(self, request,idKey):
+        try:
+            query_usuario = User.objects.get(pk=idKey)
+            query_usuario.is_superuser = False if query_usuario.is_superuser else query_usuario.is_superuser= True
+            return Response({"message": "Nível de acesso atualizado com sucesso."}, status=status.HTTP_200_OK)  
+        except:
+             return Response({'status': 'error', 'message': 'Usuario não encontrado!'}, status=status.HTTP_404_NOT_FOUND) 
+
+         
 class UsuárioDetalhes(APIView):
     permission_classes = [IsAdminUser]
 
