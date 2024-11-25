@@ -37,15 +37,15 @@ class UsuarioSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
-            email=validated_data.get('email', ''),
-            first_name=validated_data.get('first_name', ''),
+            email=validated_data.get('email'),
+            first_name=validated_data.get('first_name'),
         )
-        return 
+        return user
 
 class UsuarioDetalhesSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name')
+        fields = ('id','username', 'email', 'first_name')
 
 class RegistroCenáriosSerializer(serializers.ModelSerializer):
     class Meta:

@@ -6,7 +6,6 @@ from rest_framework import status
 from ..serializers import UsuarioSerializer,UsuarioDetalhesSerializer
 
 
-
 class UsuárioViews(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
@@ -23,27 +22,33 @@ class UsuárioNívelAcesso(APIView):
     permission_classes = [IsAdminUser]
     def post(self, request,idKey):
         try:
-            query_usuario = User.objects.get(pk=idKey)
-            query_usuario.is_superuser = False if query_usuario.is_superuser else query_usuario.is_superuser= True
-            return Response({"message": "Nível de acesso atualizado com sucesso."}, status=status.HTTP_200_OK)  
+            query_usuario = User.objects.get(id=idKey)
         except:
              return Response({'status': 'error', 'message': 'Usuario não encontrado!'}, status=status.HTTP_404_NOT_FOUND) 
 
-         
+        if query_usuario.is_superuser:
+            query_usuario.is_superuser = False 
+            query_usuario.save()
+        else: 
+            query_usuario.is_superuser= True
+            query_usuario.save()
+        return Response({"message": "Nível de acesso atualizado com sucesso."}, status=status.HTTP_200_OK) 
+    
 class UsuárioDetalhes(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self,request,idKey):
         try:
-            query_usuario = User.objects.get(pk=idKey)
-            serializer = UsuarioDetalhesSerializer(data=query_usuario)
-            return Response(serializer.data,status=status.HTTP_200_OK)
+            query_usuario = User.objects.get(username=idKey)
         except:
             return Response({'status': 'error', 'message': 'Usuario não encontrado!'},status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = UsuarioDetalhesSerializer(query_usuario)
+        return Response(serializer.data,status=status.HTTP_200_OK)
     
     def put(self,request,idKey):
         try:
-            query_usuario = User.objects.get(pk=idKey)
+            query_usuario = User.objects.get(id=idKey)
         except:
             return Response({'status': 'error', 'message': 'Usuario não encontrado!'},status=status.HTTP_404_NOT_FOUND)
 
@@ -56,7 +61,7 @@ class UsuárioDetalhes(APIView):
     
     def delete(self,request,idKey):
         try:
-            query_usuario = User.objects.get(pk=idKey)
+            query_usuario = User.objects.get(id=idKey)
         except:
             return Response({'status': 'error', 'message': 'Usuario não encontrado!'},status=status.HTTP_404_NOT_FOUND)
         query_usuario.delete()
