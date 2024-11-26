@@ -20,7 +20,7 @@ class Dispositivos(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
     modelo = models.ForeignKey(ModeloDisposivito,on_delete=models.SET_NULL ,null=True)
     status = models.BooleanField(default=False)
-   # atual_temperatura = models.IntegerField(default=22)
+    atual_temperatura = models.IntegerField(default=22)
     sala = models.ForeignKey(Sala,on_delete=models.SET_NULL ,null=True)
     updated= models.DateTimeField(auto_now=True)
     class Meta:

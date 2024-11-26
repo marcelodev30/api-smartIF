@@ -5,24 +5,56 @@ from django.shortcuts import get_object_or_404
 from ..models import Comando as dbComando
 from ..models import Dispositivos as dbDispositivos
 from ..models import RegistroLog
-from ..serializers import DispositivoSerializer
+from ..serializers import DispositivosSerializer,DispositivoSerializer
 from ..mqtt_client import client
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny,IsAdminUser
 
 
-class GetDispositivos(APIView):
+class Dispositivos(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
         query_dados = dbDispositivos.objects.all()
-        serializer = DispositivoSerializer(query_dados, many=True)
+        serializer = DispositivosSerializer(query_dados, many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
+  
+    def post(self,request):
+        serializer = DispositivoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Dispositivo criado com sucesso!"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class DispositivoDetailAPI(APIView):
+class Dispositivo(APIView):
+    permission_classes = [IsAdminUser]
     def get(selt,request,idKey):
         query_dispositivo = get_object_or_404(dbDispositivos,id=idKey)
-        serializer = DispositivoSerializer(query_dispositivo,many=False)
+        serializer = DispositivosSerializer(query_dispositivo,many=False)
         return Response(serializer.data,status=status.HTTP_200_OK)
+
+    def put(self,request,idKey):
+        try:
+            query_dispositivo = dbDispositivos.objects.get(id=idKey)
+        except:
+           return Response({'status': 'error', 'message': 'Dispositivo não encontrado!'}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = DispositivoSerializer(dbDispositivos,data = query_dispositivo)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Dispositivo atualizado com sucesso!", "data": serializer.data}, status=status.HTTP_200_OK)
+        else:
+             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+            
+  
+    def delete(self,request,idKey):
+        try:
+            query_dispositivo = dbDispositivos.objects.get(id=idKey)
+        except:
+           return Response({'status': 'error', 'message': 'Dispositivo não encontrado!'}, status=status.HTTP_404_NOT_FOUND)
+       
+        query_dispositivo.delete()
+        return Response({"message": "Dispositivo deletado com sucesso."}, status=status.HTTP_204_NO_CONTENT)
 
 
 class DispositivoControleTemperatura(APIView):
@@ -31,7 +63,6 @@ class DispositivoControleTemperatura(APIView):
 
         request_id = request.data.get('id')
         request_Comando = request.data.get('Comando')
-
         try:
             query_Dispositivo = dbDispositivos.objects.get(id= request_id)
         except:
@@ -46,6 +77,7 @@ class DispositivoControleTemperatura(APIView):
                     return Response({'status': 'error', 'message': 'Comando não foi cadastrado no banco de dados!'}, status=status.HTTP_404_NOT_FOUND)
                 if(query_Dispositivo.status):
                     client.publish('smartIF/dispositivo/'+str(request_id),query_dbComando.codigo)
+                    query_Dispositivo.atual_temperatura = temperatura_comando
                     RegistroLog(comando = request_Comando,usuario=request.user.username,dispositivo = query_Dispositivo.modelo.nome+" - "+query_Dispositivo.sala.nome).save()
                     return Response({'status': 'success', 'message': f"O ar-condicionado do {query_Dispositivo.sala.nome} está com a temperatura ajustada para {temperatura_comando}°C"}, status=status.HTTP_200_OK)
                 else:
@@ -57,6 +89,7 @@ class DispositivoControleTemperatura(APIView):
 
 
 class DispositivoControleEstado(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
         request_id = request.data.get('id')
         try:
@@ -65,6 +98,7 @@ class DispositivoControleEstado(APIView):
             return Response({'status': 'error', 'message': 'Dispositivo não encontrado!'}, status=status.HTTP_404_NOT_FOUND) 
 
         if(query_Dispositivo.status):
+            if query_Dispositivo.atual_temperatura!=22:query_Dispositivo.atual_temperatura=22
             query_Dispositivo.status=False
             request_Comando = 'off'
             query_Dispositivo.save()
@@ -72,6 +106,7 @@ class DispositivoControleEstado(APIView):
             query_Dispositivo.status=True
             request_Comando = 'on'
             query_Dispositivo.save()
+          
 
         query_dbComando = dbComando.objects.get(nome = request_Comando, modelo = query_Dispositivo.modelo.id)
         client.publish('smartIF/dispositivo/'+str(request_id),query_dbComando.codigo)

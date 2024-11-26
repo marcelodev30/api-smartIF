@@ -1,2 +1,2 @@
-from .dispositivos_views import DispositivoControleTemperatura,GetDispositivos,DispositivoControleEstado,DispositivoDetailAPI
+from .dispositivos_views import DispositivoControleTemperatura,Dispositivos,DispositivoControleEstado,Dispositivo
 from .usuario_views import UsuárioViews,UsuárioNívelAcesso,UsuárioDetalhes

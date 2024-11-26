@@ -19,12 +19,24 @@ class ModeloDisposivitoSerializer(serializers.ModelSerializer):
         model = ModeloDisposivito
         fields = ['nome','marca','modelo','min_temperatura','max_temperatura']
 
-class DispositivoSerializer(serializers.ModelSerializer):
+class DispositivosSerializer(serializers.ModelSerializer):
     modelo=ModeloDisposivitoSerializer()
     sala = SalaSerializer()
     class Meta:
         model = Dispositivos
-        fields = ['id','modelo','status','sala']
+        fields = ['id','modelo','status','sala','atual_temperatura']
+
+class DispositivoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dispositivos
+        fields = ['modelo','status','sala']
+    def create(self, validated_data):
+        dispositivo = Dispositivos.objects.create(
+            modelo=validated_data['modelo'],
+            sala=validated_data['sala'],
+        )
+        return dispositivo
+
 
 class UsuarioSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
