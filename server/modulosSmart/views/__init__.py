@@ -1,2 +1,3 @@
 from .dispositivos_views import DispositivoControleTemperatura,Dispositivos,DispositivoControleEstado,Dispositivo
 from .usuario_views import UsuárioViews,UsuárioNívelAcesso,UsuárioDetalhes
+from .modeloDisposito_views import ModeloDispositivos,ModeloDispositivo
