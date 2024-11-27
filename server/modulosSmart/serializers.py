@@ -39,7 +39,7 @@ class DispositivosSerializer(serializers.ModelSerializer):
     sala = SalaSerializer()
     class Meta:
         model = Dispositivos
-        fields = ['id','modelo','status','sala','atual_temperatura']
+        fields = ['id','modelo','status','atual_temperatura','sala']
 
 class DispositivoSerializer(serializers.ModelSerializer):
     class Meta:
