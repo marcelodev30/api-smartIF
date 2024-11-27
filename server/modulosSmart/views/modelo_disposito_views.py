@@ -7,7 +7,7 @@ from ..serializers import ModeloDisposivitoSerializer
 from ..models import ModeloDisposivito  as dbModeloDisposivito
 
 
-class ModeloDispositivos(APIView):
+class ModeloDispositivosViews(APIView):
     permission_classes = [IsAdminUser]
     def get(self,request):
         query_modeloDisposivo = dbModeloDisposivito.objects.all()
@@ -23,7 +23,7 @@ class ModeloDispositivos(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ModeloDispositivo(APIView):
+class ModeloDispositivoViews(APIView):
     permission_classes = [IsAdminUser]
     
     def get(self,request,idKey):

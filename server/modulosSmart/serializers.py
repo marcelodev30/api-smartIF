@@ -77,4 +77,4 @@ class UsuarioDetalhesSerializer(serializers.ModelSerializer):
 class RegistroCenáriosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Registro_Cenários
-        fields = ["nome","ação","dispositivo","data","status"]
+        fields = ["id","nome","ação","dispositivo","data","status"]

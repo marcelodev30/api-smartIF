@@ -10,7 +10,7 @@ from ..mqtt_client import client
 from rest_framework.permissions import AllowAny,IsAdminUser
 
 
-class Dispositivos(APIView):
+class DispositivosViews(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
         query_dados = dbDispositivos.objects.all()
@@ -26,7 +26,7 @@ class Dispositivos(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class Dispositivo(APIView):
+class DispositivoViews(APIView):
     permission_classes = [IsAdminUser]
     def get(selt,request,idKey):
         query_dispositivo = get_object_or_404(dbDispositivos,id=idKey)

@@ -18,7 +18,7 @@ class UsuárioViews(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UsuárioNívelAcesso(APIView):
+class UsuárioNívelAcessoViews(APIView):
     permission_classes = [IsAdminUser]
     def post(self, request,idKey):
         try:
@@ -34,7 +34,7 @@ class UsuárioNívelAcesso(APIView):
             query_usuario.save()
         return Response({"message": "Nível de acesso atualizado com sucesso."}, status=status.HTTP_200_OK) 
     
-class UsuárioDetalhes(APIView):
+class UsuárioDetalhesViews(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self,request,idKey):
