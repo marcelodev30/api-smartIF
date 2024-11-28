@@ -7,12 +7,31 @@ class SetorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Setor
         fields = ['nome']
+    
+    def create(self, validated_data):
+        setor = Setor.objects.create(
+            nome=validated_data['nome'],
+        )
+        return setor
 
-class SalaSerializer(serializers.ModelSerializer):
+class SalasSerializer(serializers.ModelSerializer):
     local = SetorSerializer()
     class Meta:
         model = Sala
         fields = ['nome','local']
+
+class SalaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sala
+        fields = ['nome','local']
+    
+    def create(self, validated_data):
+        sala = Sala.objects.create(
+            nome=validated_data['nome'],
+            local=validated_data['local'],
+        )
+        return sala
+
 
 class ModeloDisposivitosSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,10 +55,11 @@ class ModeloDisposivitoSerializer(serializers.ModelSerializer):
 
 class DispositivosSerializer(serializers.ModelSerializer):
     modelo=ModeloDisposivitosSerializer()
-    sala = SalaSerializer()
+    sala = SalasSerializer()
     class Meta:
         model = Dispositivos
         fields = ['id','modelo','status','atual_temperatura','sala']
+
 
 class DispositivoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -74,7 +94,14 @@ class UsuarioDetalhesSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id','username', 'email', 'first_name')
 
-class RegistroCenáriosSerializer(serializers.ModelSerializer):
+class RegistroCenárioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Registro_Cenários
         fields = ["id","ação","dispositivo","data","status"]
+
+class RegistroCenáriosSerializer(serializers.ModelSerializer):
+    dispositivo = DispositivosSerializer()
+    class Meta:
+        model = Registro_Cenários
+        fields = ["id","ação","data","status","dispositivo"]
+

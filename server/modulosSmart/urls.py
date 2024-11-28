@@ -3,6 +3,8 @@ from .views import DispositivoControleTemperatura,DispositivosViews,DispositivoC
 from .views import UsuárioNívelAcessoViews,UsuárioDetalhesViews,UsuárioViews
 from .views import ModeloDispositivosViews,ModeloDispositivoViews
 from .views import CenariosViews,CenarioViews
+from .views import SetorsViews,SetorViews
+from .views import SalasViews,SalaViews
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -18,5 +20,9 @@ urlpatterns = [
     path('api/usuarios/nivel-acesso/<uuid:idKey>', UsuárioNívelAcessoViews.as_view(), name='usuario_nivel'),
     path('api/cenarios', CenariosViews.as_view(), name='get_Cenarios'),
     path('api/cenario/<uuid:idKey>', CenarioViews.as_view(), name='get_Cenario'),
+    path('api/setors', SetorsViews.as_view(), name='get_setors'),
+    path('api/setor/<uuid:idKey>', SetorViews.as_view(), name='get_setor'),
+    path('api/salas', SalasViews.as_view(), name='get_salas'),
+    path('api/sala/<uuid:idKey>', SalaViews.as_view(), name='get_sala'),
    
 ]

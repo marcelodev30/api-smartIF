@@ -27,7 +27,7 @@ class ModeloDispositivoViews(APIView):
     permission_classes = [IsAdminUser]
     
     def get(self,request,idKey):
-        query_modeloDisposivo = dbModeloDisposivito.get_object_or_404(dbModeloDisposivito,id=idKey)
+        query_modeloDisposivo = get_object_or_404(dbModeloDisposivito,id=idKey)
         serializer = ModeloDisposivitoSerializer(query_modeloDisposivo,many=False)
         return Response(serializer.data,status=status.HTTP_200_OK)
     
