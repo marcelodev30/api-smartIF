@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework.permissions import AllowAny,IsAdminUser
+from rest_framework.permissions import AllowAny,IsAdminUser,IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -35,7 +35,14 @@ class UsuárioNívelAcessoViews(APIView):
         return Response({"message": "Nível de acesso atualizado com sucesso."}, status=status.HTTP_200_OK) 
     
 class UsuárioDetalhesViews(APIView):
-    permission_classes = [IsAdminUser]
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        elif self.request.method == 'POST':
+            return [IsAdminUser()]
+        elif self.request.method in ['PUT', 'DELETE']:
+            return [IsAdminUser()]
+        return super().get_permissions()
 
     def get(self,request,idKey):
         try:

@@ -1,13 +1,20 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser,IsAuthenticated
 from django.shortcuts import get_object_or_404
 from ..serializers import SetorSerializer,SetorsSerializer
 from ..models import Setor  as dbSetor
 
 class SetorsViews(APIView):
-    permission_classes = [IsAdminUser]
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        elif self.request.method == 'POST':
+            return [IsAdminUser()]
+        elif self.request.method in ['PUT', 'DELETE']:
+            return [IsAdminUser()]
+        return super().get_permissions()
     def get(self,request):
         query_setors = dbSetor.objects.all()
         Serializer = SetorsSerializer(query_setors,many=True)
@@ -23,7 +30,14 @@ class SetorsViews(APIView):
 
 
 class SetorViews(APIView):
-    permission_classes = [IsAdminUser]
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        elif self.request.method == 'POST':
+            return [IsAdminUser()]
+        elif self.request.method in ['PUT', 'DELETE']:
+            return [IsAdminUser()]
+        return super().get_permissions()
     
     def get(self,request,idKey):
         query_setor = get_object_or_404(dbSetor,id=idKey)

@@ -1,14 +1,21 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser,IsAuthenticated
 from django.shortcuts import get_object_or_404
 from ..serializers import ModeloDisposivitoSerializer
 from ..models import ModeloDisposivito  as dbModeloDisposivito
 
 
 class ModeloDispositivosViews(APIView):
-    permission_classes = [IsAdminUser]
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        elif self.request.method == 'POST':
+            return [IsAdminUser()]
+        elif self.request.method in ['PUT', 'DELETE']:
+            return [IsAdminUser()]
+        return super().get_permissions()
     def get(self,request):
         query_modeloDisposivo = dbModeloDisposivito.objects.all()
         Serializer =ModeloDisposivitoSerializer(query_modeloDisposivo,many=True)
@@ -24,7 +31,14 @@ class ModeloDispositivosViews(APIView):
 
 
 class ModeloDispositivoViews(APIView):
-    permission_classes = [IsAdminUser]
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        elif self.request.method == 'POST':
+            return [IsAdminUser()]
+        elif self.request.method in ['PUT', 'DELETE']:
+            return [IsAdminUser()]
+        return super().get_permissions()
     
     def get(self,request,idKey):
         query_modeloDisposivo = get_object_or_404(dbModeloDisposivito,id=idKey)

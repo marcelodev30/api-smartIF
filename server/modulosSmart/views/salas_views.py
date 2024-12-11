@@ -1,14 +1,21 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser,IsAuthenticated
 from django.shortcuts import get_object_or_404
 from ..serializers import SalasSerializer,SalaSerializer
 from ..models import Sala as dbSala
 
 
 class SalasViews(APIView):
-    permission_classes = [IsAdminUser]
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        elif self.request.method == 'POST':
+            return [IsAdminUser()]
+        elif self.request.method in ['PUT', 'DELETE']:
+            return [IsAdminUser()]
+        return super().get_permissions()
     def get(self,request):
         query_sala = dbSala.objects.all()
         serializer = SalasSerializer(query_sala,many=True)
@@ -23,7 +30,14 @@ class SalasViews(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SalaViews(APIView):
-    permission_classes = [IsAdminUser]
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        elif self.request.method == 'POST':
+            return [IsAdminUser()]
+        elif self.request.method in ['PUT', 'DELETE']:
+            return [IsAdminUser()]
+        return super().get_permissions()
     def get(selt,request,idKey):
         query_sala = get_object_or_404(dbSala,id=idKey)
         serializer = SalasSerializer(query_sala,many=False)

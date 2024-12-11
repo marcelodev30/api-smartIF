@@ -11,7 +11,14 @@ from rest_framework.permissions import AllowAny,IsAdminUser
 
 
 class DispositivosViews(APIView):
-    permission_classes = [AllowAny]
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        elif self.request.method == 'POST':
+            return [IsAdminUser()]
+        elif self.request.method in ['PUT', 'DELETE']:
+            return [IsAdminUser()]
+        return super().get_permissions()
     def get(self, request):
         query_dados = dbDispositivos.objects.all()
         serializer = DispositivosSerializer(query_dados, many=True)
@@ -27,7 +34,13 @@ class DispositivosViews(APIView):
 
 
 class DispositivoViews(APIView):
-    permission_classes = [IsAdminUser]
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        elif self.request.method == 'POST':
+            return [IsAdminUser()]
+        elif self.request.method in ['PUT', 'DELETE']:
+            return [IsAdminUser()]
     def get(selt,request,idKey):
         query_dispositivo = get_object_or_404(dbDispositivos,id=idKey)
         serializer = DispositivosSerializer(query_dispositivo,many=False)
