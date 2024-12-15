@@ -5,9 +5,11 @@ from .views import ModeloDispositivosViews,ModeloDispositivoViews
 from .views import CenariosViews,CenarioViews
 from .views import SetorsViews,SetorViews
 from .views import SalasViews,SalaViews
+from .views import home_views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
+    path('', home_views.home, name='Home'),
     path('api/dispositivos', DispositivosViews.as_view(), name='getData'),
     path('api/dispositivo/<uuid:idKey>', DispositivoViews.as_view(), name='getData'),
     path('api/dispositivo/controle/temperatura', DispositivoControleTemperatura.as_view(), name='send'),
