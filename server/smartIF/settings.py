@@ -97,8 +97,12 @@ WSGI_APPLICATION = 'smartIF.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': config('DATABASE_NAME'),
+        'USER': config('DATABASE_USER'),
+        'PASSWORD': config('DATABASE_PASSWORD'),
+        'HOST': config('DATABASE_HOST'), 
+        'PORT': config('DATABASE_PORT'),
     }
 }
 
@@ -144,8 +148,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+# MQTT 
 MQTT_BROKER = config('MQTT_BROKER')
 MQTT_USER = config('MQTT_USER')
 MQTT_PASSWORD = config('MQTT_PASSWORD')
 ID_CLIENT_MQTT = config('ID_CLIENT_MQTT')
+
