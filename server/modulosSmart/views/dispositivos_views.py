@@ -91,7 +91,7 @@ class DispositivoControleTemperatura(APIView):
                 if(query_Dispositivo.status):
                     client.publish('smartIF/dispositivo/'+str(request_id),query_dbComando.codigo)
                     query_Dispositivo.atual_temperatura = temperatura_comando
-                    RegistroLog(comando = request_Comando,usuario=request.user.username,dispositivo = query_Dispositivo.modelo.nome+" - "+query_Dispositivo.sala.nome).save()
+                    RegistroLog(comando = request_Comando,usuario=request.user.nome,dispositivo = query_Dispositivo.modelo.nome+" - "+query_Dispositivo.sala.nome).save()
                     return Response({'status': 'success', 'message': f"O ar-condicionado do {query_Dispositivo.sala.nome} está com a temperatura ajustada para {temperatura_comando}°C"}, status=status.HTTP_200_OK)
                 else:
                      return Response({'status': 'error', 'message': 'Dispositivo está desligado!'}, status=status.HTTP_400_BAD_REQUEST)
@@ -123,7 +123,7 @@ class DispositivoControleEstado(APIView):
 
         query_dbComando = dbComando.objects.get(nome = request_Comando, modelo = query_Dispositivo.modelo.id)
         client.publish('smartIF/dispositivo/'+str(request_id),query_dbComando.codigo)
-        RegistroLog(comando = request_Comando,usuario=request.user.username,dispositivo = query_Dispositivo.modelo.nome+" - "+query_Dispositivo.sala.nome).save()
+        RegistroLog(comando = request_Comando,usuario=request.user.nome,dispositivo = query_Dispositivo.modelo.nome+" - "+query_Dispositivo.sala.nome).save()
         
         return Response({'status': 'success', 'message': f"O ar-condicionado do {query_Dispositivo.sala.nome} foi {query_Dispositivo.status if 'Ligado' else 'Desligado'} com sucesso"}, status=status.HTTP_200_OK)
 
