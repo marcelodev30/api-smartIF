@@ -7,7 +7,7 @@ from ..models import Dispositivos as dbDispositivos
 from ..models import RegistroLog
 from ..serializers import DispositivosSerializer,DispositivoSerializer
 from ..mqtt_client import client
-from rest_framework.permissions import AllowAny,IsAdminUser
+from rest_framework.permissions import AllowAny,IsAdminUser,IsAuthenticated
 
 
 class DispositivosViews(APIView):
@@ -71,7 +71,7 @@ class DispositivoViews(APIView):
 
 
 class DispositivoControleTemperatura(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def post(self, request):
 
         request_id = request.data.get('id')
@@ -89,7 +89,7 @@ class DispositivoControleTemperatura(APIView):
                 except:
                     return Response({'status': 'error', 'message': 'Comando não foi cadastrado no banco de dados!'}, status=status.HTTP_404_NOT_FOUND)
                 if(query_Dispositivo.status):
-                    client.publish('smartIF/dispositivo/'+str(request_id),query_dbComando.codigo)
+                    client.publish('smartIF/dispositivo/'+str(request_id),query_dbComando.codigo, qos=1)
                     query_Dispositivo.atual_temperatura = temperatura_comando
                     RegistroLog(comando = request_Comando,usuario=request.user.nome,dispositivo = query_Dispositivo.modelo.nome+" - "+query_Dispositivo.sala.nome).save()
                     return Response({'status': 'success', 'message': f"O ar-condicionado do {query_Dispositivo.sala.nome} está com a temperatura ajustada para {temperatura_comando}°C"}, status=status.HTTP_200_OK)
@@ -102,7 +102,7 @@ class DispositivoControleTemperatura(APIView):
 
 
 class DispositivoControleEstado(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         request_id = request.data.get('id')
         try:
@@ -122,7 +122,7 @@ class DispositivoControleEstado(APIView):
           
 
         query_dbComando = dbComando.objects.get(nome = request_Comando, modelo = query_Dispositivo.modelo.id)
-        client.publish('smartIF/dispositivo/'+str(request_id),query_dbComando.codigo)
+        client.publish('smartIF/dispositivo/'+str(request_id),query_dbComando.codigo, qos=1)
         RegistroLog(comando = request_Comando,usuario=request.user.nome,dispositivo = query_Dispositivo.modelo.nome+" - "+query_Dispositivo.sala.nome).save()
         
         return Response({'status': 'success', 'message': f"O ar-condicionado do {query_Dispositivo.sala.nome} foi {query_Dispositivo.status if 'Ligado' else 'Desligado'} com sucesso"}, status=status.HTTP_200_OK)

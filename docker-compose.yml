@@ -1,5 +1,9 @@
 version: '3.8'
 
+networks:
+  app_network:
+    driver: bridge
+
 services:
   web:
     build: .
@@ -12,12 +16,11 @@ services:
     depends_on:
       - db
       - mqtt
-    environment:
-      - DATABASE_NAME=smartif
-      - DATABASE_USER=ifpb
-      - DATABASE_PASSWORD=smartif@24
-      - DATABASE_HOST=db
-      - DATABASE_PORT=3306
+      - redis
+    env_file:
+      - .env
+    networks:
+      - app_network
 
   db:
     image: mysql:8.0
@@ -31,6 +34,8 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - app_network
 
   mqtt:
     image: eclipse-mosquitto:2
@@ -41,8 +46,20 @@ services:
       - mosquitto_logs:/mosquitto/log
     ports:
       - "1883:1883"
+    networks:
+      - app_network
+  
+  redis:
+    image: redis:7.0
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - app_network
 
 volumes:
   mysql_data:
   mosquitto_data:
   mosquitto_logs:
+
